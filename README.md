@@ -1,4 +1,4 @@
-# AWS-PDF-Generator-
+# AWS PDF Generator
 
 PDFs are a core part any web applications, used for sending invoices, reports, or signed documents — As s developer, it is inevitable that eventually everyone will have to implement a PDF generation feature that is both scalable and secure.
 
