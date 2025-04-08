@@ -24,7 +24,11 @@ const generatePdf = async (content: string): Promise<Buffer> => {
   const chromium = require('chrome-aws-lambda');
   let browser: any = undefined;
   try {
-    // launch a headless chrome instance
+    
+    
+    // Launch a headless chrome instance
+    
+    
     const executablePath = await chromium.executablePath;
     browser = await chromium.puppeteer.launch({
       args: chromium.args,
@@ -33,20 +37,33 @@ const generatePdf = async (content: string): Promise<Buffer> => {
       defaultViewport: chromium.defaultViewport,
     });
 
-    // create a new page
+    
+    
+    // Create a new page
+    
+    
     const page = await browser.newPage();
     const html = `<h1> Hi! Here is a copy of your PDF Content that you requested!</h1> <br/> <hr/> <p> ${content} </p>`;
-    // set the content of the page
+    
+    
+    // Sets page's content
+    
+    
     await page.setContent(html);
 
-    // generate the pdf as a buffer and return it
+   
+    // Generates the PDF as a buffer and returns it
+
+    
     return (await page.pdf({ format: "A4" })) as Buffer;
   } catch (err) {
     console.error(err);
     throw err;
   } finally {
     if (browser !== undefined) {
-      // close the browser
+      
+      // Close browser
+      
       await browser.close();
     }
   }
@@ -61,12 +78,14 @@ export const pdfProcessingLambda = new aws.lambda.CallbackFunction("pdfProcessin
         content: string;
       };
 
-      // generate pdf
+      // Generate PDF
+      
       const pdf = await generatePdf(content);
 
       const pdfName = `${messageId}.pdf`;
 
-      // upload pdf to s3
+      // Upload PDF to S3
+      
       const s3 = new aws.sdk.S3({ region: "eu-central-1" });
       await s3.putObject({
         Bucket: pdfBucket.bucket.get(),
@@ -75,14 +94,16 @@ export const pdfProcessingLambda = new aws.lambda.CallbackFunction("pdfProcessin
         ContentType: "application/pdf",
       }).promise();
 
-      // generate signed url from s3 for public reads.
+      // Generate signed URL from S3 for Public Reads
+      
       const signedUrl = await s3.getSignedUrlPromise("getObject", {
         Bucket: pdfBucket.bucket.get(),
         Key: `pdf/${pdfName}`,
-        Expires: 60 * 60 * 24 * 7, // 7 days
+        Expires: 60 * 60 * 24 * 7,  // 7 days
       });
 
-      // send email with signed url
+      // Send email with signed URL
+      
       const ses = new aws.sdk.SES({ region: "us-east-1" });
       await ses.sendEmail({
         Source: senderEmail,
@@ -93,7 +114,8 @@ export const pdfProcessingLambda = new aws.lambda.CallbackFunction("pdfProcessin
         },
       }).promise();
 
-      // delete message from queue
+      // Deletes message from queue
+      
       await sqs.deleteMessage({ QueueUrl: Queues.pdfProcessingQueue.url.get(), ReceiptHandle: receiptHandle }).promise();
       console.log(`Deleted message ${messageId} from queue`);
     });
