@@ -10,20 +10,33 @@ export const apiGateway = new awsx.apigateway.API("api", {
       path: "/pdf",
       method: "POST",
       eventHandler: async (event) => {
-        // client passes email and content to add to pdf
+        
+        
+        // Client passes email and content to add to PDF
+        
+        
         const { email, content } = JSON.parse(event.body || "{}");
 
-        // construct message to send to SQS
+       
+        // Constructs message to send to SQS
+        
+        
         const sqsParams = {
           MessageBody: JSON.stringify({ email, content }),
           QueueUrl: Queues.pdfProcessingQueue.url.get(),
         };
 
-        // send message to SQS
+        
+        // Sends message to SQS
+        
+        
         const resp = await sqs.sendMessage(sqsParams).promise();
         const { MessageId } = resp;
 
-        // return message id to client for tracking purposes
+        
+        // Return message ID to client to allow Tracking 
+        
+        
         return { statusCode: 200, body: JSON.stringify({ MessageId }) };
       },
     },
