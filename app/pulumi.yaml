@@ -1,5 +1,5 @@
 
-name: pdf-generator
+name: aws-pdf-generator
 runtime: nodejs
 config:
   aws:region: eu-west-2 (endpoint: rds.eu-west-2.api.aws) 
