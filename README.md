@@ -8,4 +8,4 @@ To overcome these challenges, server-side PDF generation is a more suitable appr
 
 Leveraging serverless architecture enhances this even further by offering scalability, resilience, and cost-efficiency. The architecture uses AWS services to build a robust PDF generation pipeline. API Gateway receives client requests, triggering a Lambda function that pushes data to an SQS queue. This queue decouples the generation process and ensures scalability. Another Lambda function processes the queue to generate PDFs and store them in an S3 bucket. SES is then used to email a signed URL of the PDF to the client. For fault tolerance, a Dead Letter Queue captures failed messages after multiple retries.
 
-This design pattern enables a secure, traceable, and efficient PDF generation service that can grow with the application’s needs.
+This design allows for a secure, traceable, and efficient PDF generation service that can grow with the application’s needs.
