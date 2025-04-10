@@ -1,0 +1,6 @@
+
+name: pdf-generator
+runtime: nodejs
+config:
+  aws:region: eu-west-2 (endpoint: rds.eu-west-2.api.aws) 
+  pdf-generator:sender-email: <<>>
