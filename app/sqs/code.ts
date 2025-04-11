@@ -7,6 +7,10 @@ import { pdfProcessingLambda } from '../lambda';
 const deadLetterQueue = new aws.sqs.Queue("deadLetterQueue", {
     name: "deadLetterQueue",
     visibilityTimeoutSeconds: 120, 
+
+    //Visible for 2 minutes then timeout
+
+    
     messageRetentionSeconds: 604800, 
   
   // Remove messages in DLQ after 7 Days
